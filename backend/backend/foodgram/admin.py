@@ -1,14 +1,7 @@
 from django.contrib import admin
 
-from foodgram.models import (
-    Tag,
-    Ingredient,
-    Recipe,
-    ShoppingList,
-    Favorite,
-    Subscription,
-    RecipeIngredient
-)
+from foodgram.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                             ShoppingList, Subscription, Tag)
 
 
 @admin.register(Ingredient)

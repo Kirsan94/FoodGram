@@ -1,9 +1,9 @@
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 
-from .models import User
 from foodgram.models import Subscription
 
-from djoser.serializers import UserSerializer, UserCreateSerializer
+from .models import User
 
 
 class CustomUserSerializer(UserSerializer):

@@ -8,7 +8,7 @@ SECRET_KEY = os.getenv(
     default='6n=9!(z3(a8r!61!1lbgdr*7k5(fwkv&lf=a92#1eo+s$&yqde'
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -106,7 +106,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 STATIC_URL = '/static/'
 
@@ -134,13 +134,6 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization',
             'in': 'header'
         }
-    }
-}
-
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
     }
 }
 

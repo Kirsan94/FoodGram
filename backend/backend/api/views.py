@@ -1,26 +1,18 @@
-from rest_framework import viewsets, permissions, status, filters
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404, HttpResponse
 from django.db.models import Sum
+from django.shortcuts import HttpResponse, get_object_or_404
+from rest_framework import filters, permissions, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from foodgram.models import Subscription
-from .permissions import IsAuthorOrAdminOrReadOnly
+
 from .filters import RecipeFilter
-from .serializers import (
-    Tag,
-    TagSerializer,
-    Recipe,
-    RecipeSerializer,
-    Favorite,
-    FavoriteSerializer,
-    Ingredient,
-    IngredientSerializer,
-    ShoppingList,
-    ShoppingListSerializer,
-    RecipeIngredient,
-    User,
-    UserSubscriptionSerializer
-)
+from .permissions import IsAuthorOrAdminOrReadOnly
+from .serializers import (Favorite, FavoriteSerializer, Ingredient,
+                          IngredientSerializer, Recipe, RecipeIngredient,
+                          RecipeSerializer, ShoppingList,
+                          ShoppingListSerializer, Tag, TagSerializer, User,
+                          UserSubscriptionSerializer)
 
 
 class TagViewSet(viewsets.ModelViewSet):
