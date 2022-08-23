@@ -20,8 +20,16 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField('Название', max_length=200, unique=True)
+    name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField('Единица измерения', max_length=200)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'measurement_unit'],
+                name='ingredient_measurement_unit'
+            )
+        ]
 
     def str(self):
         return self.name
@@ -88,6 +96,9 @@ class ShoppingList(models.Model):
         related_name='shoppinglist'
     )
 
+    def str(self):
+        return f'{self.user} - {self.recipe}'
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(
@@ -109,6 +120,9 @@ class Favorite(models.Model):
             )
         ]
 
+    def str(self):
+        return f'{self.user} - {self.recipe}'
+
 
 class Subscription(models.Model):
     user = models.ForeignKey(
@@ -129,6 +143,9 @@ class Subscription(models.Model):
                 name='unique_subscription'
             )
         ]
+
+    def str(self):
+        return f'{self.user} - {self.author}'
 
 
 class RecipeIngredient(models.Model):
@@ -154,6 +171,9 @@ class RecipeIngredient(models.Model):
             MinValueValidator(1, 'Невозможны неположительные значения!')
         ]
     )
+
+    def str(self):
+        return f'{self.recipe} - {self.ingredient} - {self.amount}'
 
     class Meta:
         constraints = [
