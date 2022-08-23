@@ -27,7 +27,7 @@ class RecipeAdmin(admin.ModelAdmin):
     readonly_fields = ('count_favorites',)
 
     def count_favorites(self, obj):
-        return obj.favorites.count()
+        return obj.favorite.count()
 
 
 admin.site.register(Tag)

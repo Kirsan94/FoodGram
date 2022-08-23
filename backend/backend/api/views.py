@@ -1,9 +1,11 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404, HttpResponse
 from django.db.models import Sum
 from foodgram.models import Subscription
+from .permissions import IsAuthorOrAdminOrReadOnly
+from .filters import RecipeFilter
 from .serializers import (
     Tag,
     TagSerializer,
@@ -24,16 +26,28 @@ from .serializers import (
 class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
+    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+    pagination_class = None
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('^name',)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     queryset = Recipe.objects.all()
+    permission_classes = [IsAuthorOrAdminOrReadOnly, ]
+    filterset_class = RecipeFilter
+    filterset_fields = (
+        'tags',
+        'author',
+        'is_favorited',
+        'is_in_shopping_cart'
+    )
 
     @action(
         detail=True,
@@ -126,9 +140,15 @@ class UserViewSet(viewsets.ModelViewSet):
         in_subscribed = Subscription.objects.filter(
             user=current_user, author=author)
         if request.method == 'POST':
-            serializer = UserSubscriptionSerializer(author)
+            serializer = UserSubscriptionSerializer(
+                author,
+                context={'request': request}
+            )
             if in_subscribed.exists():
                 data = {'errors': 'Вы уже подписаны на этого автора.'}
+                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+            if author == current_user:
+                data = {'errors': 'Нельзя подписаться на себя.'}
                 return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             Subscription.objects.create(user=current_user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -144,10 +164,14 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=['GET'],
-        permission_classes=(permissions.IsAuthenticated,)
+        permission_classes=(permissions.IsAuthenticated,),
     )
     def subscriptions(self, request):
         current_user = self.request.user
         user_subscribtions = User.objects.filter(subscribed__user=current_user)
-        serializer = UserSubscriptionSerializer(user_subscribtions, many=True)
-        return Response(serializer.data)
+        subscriptions_paginated = self.paginate_queryset(user_subscribtions)
+        serializer = UserSubscriptionSerializer(
+            subscriptions_paginated,
+            many=True, context={'request': request}
+        )
+        return self.get_paginated_response(serializer.data)

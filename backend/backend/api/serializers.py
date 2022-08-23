@@ -212,7 +212,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
 
 class UserSubscriptionSerializer(CustomUserSerializer):
-    recipes = ShoppingListSerializer(many=True, read_only=True)
+    recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.BooleanField(default=True, read_only=True)
 
@@ -231,3 +231,12 @@ class UserSubscriptionSerializer(CustomUserSerializer):
 
     def get_recipes_count(self, obj):
         return obj.recipes.count()
+
+    def get_recipes(self, obj):
+        request = self.context.get('request')
+        limit = request.GET.get('recipes_limit')
+        recipes = obj.recipes
+        if limit:
+            recipes = recipes.all()[:int(limit)]
+        context = {'request': request}
+        return ShoppingListSerializer(recipes, context=context, many=True).data
