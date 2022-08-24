@@ -1,12 +1,12 @@
 from django.db.models import Sum
 from django.shortcuts import HttpResponse, get_object_or_404
-from rest_framework import filters, permissions, status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from foodgram.models import Subscription
 
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientFilter
 from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import (Favorite, FavoriteSerializer, Ingredient,
                           IngredientSerializer, Recipe, RecipeIngredient,
@@ -31,8 +31,10 @@ class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
     pagination_class = None
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('^name',)
+    filterset_class = IngredientFilter
+    filterset_fields = (
+        'name'
+    )
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
