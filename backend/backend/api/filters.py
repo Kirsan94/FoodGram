@@ -17,24 +17,22 @@ class RecipeFilter(filters.FilterSet):
     def get_is_favorited(self, queryset, name, value):
         if self.request.user.is_anonymous:
             return queryset
-        if value == 1:
+        if value:
             return queryset.filter(favorite__user=self.request.user)
-        if value == 0:
+        else:
             return queryset.exclude(favorite__user=self.request.user)
-        return queryset.none()
 
     def get_is_in_shopping_cart(self, queryset, name, value):
         if self.request.user.is_anonymous:
             return queryset
-        if value == 1:
+        if value:
             return queryset.filter(
                 shoppinglist__user=self.request.user
             )
-        if value == 0:
+        else:
             return queryset.exclude(
                 shoppinglist__user=self.request.user
             )
-        return queryset.none()
 
     class Meta:
         model = Recipe

@@ -64,21 +64,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
             user=current_user,
             recipe=recipe
         )
+        data = {'user': current_user, 'recipe': recipe}
+        serializer = FavoriteSerializer(
+            data=data,
+            context={'request': request},
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
         if request.method == 'POST':
-            serializer = FavoriteSerializer(recipe)
-            if recipe_in_favorite.exists():
-                data = {'errors': 'Этот рецепт уже есть в избранном.'}
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             Favorite.objects.create(user=current_user, recipe=recipe)
+            serializer = FavoriteSerializer(
+                recipe,
+                context={'request': request}
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            if not recipe_in_favorite.exists():
-                data = {
-                    'errors': 'Этого рецепта нет в избранном пользователя.'
-                }
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            recipe_in_favorite.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        recipe_in_favorite.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=True,
@@ -91,21 +92,22 @@ class RecipeViewSet(viewsets.ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         in_shopping_cart = ShoppingList.objects.filter(
             user=current_user, recipe=recipe)
+        data = {'user': current_user, 'recipe': recipe}
+        serializer = ShoppingListSerializer(
+            data=data,
+            context={'request': request},
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
         if request.method == 'POST':
-            serializer = ShoppingListSerializer(recipe)
-            if in_shopping_cart.exists():
-                data = {'errors': 'Этот рецепт уже есть в списке покупок.'}
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             ShoppingList.objects.create(user=current_user, recipe=recipe)
+            serializer = ShoppingListSerializer(
+                recipe,
+                context={'request': request}
+            )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            if not in_shopping_cart.exists():
-                data = {
-                    'errors': 'Этого рецепта нет в списке покупок.'
-                }
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            in_shopping_cart.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        in_shopping_cart.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,
@@ -146,25 +148,21 @@ class UserViewSet(viewsets.ModelViewSet):
         author = get_object_or_404(User, pk=pk)
         in_subscribed = Subscription.objects.filter(
             user=current_user, author=author)
+        data = {'user': current_user, 'author': author}
+        serializer = UserSubscriptionSerializer(
+            data=data,
+            context={'request': request},
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
         if request.method == 'POST':
+            Subscription.objects.create(user=current_user, author=author)
             serializer = UserSubscriptionSerializer(
                 author,
                 context={'request': request}
             )
-            if in_subscribed.exists():
-                data = {'errors': 'Вы уже подписаны на этого автора.'}
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            if author == current_user:
-                data = {'errors': 'Нельзя подписаться на себя.'}
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
-            Subscription.objects.create(user=current_user, author=author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
-            if not in_subscribed.exists():
-                data = {
-                    'errors': 'Вы не подписаны на этого автора.'
-                }
-                return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
             in_subscribed.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
