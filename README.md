@@ -1,4 +1,4 @@
-![example workflow](https://github.com/kirsan94/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+![example workflow](https://github.com/kirsan94/FoodGram/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 ## Дипломный проект FoodGram
 Технологии:
@@ -14,6 +14,7 @@
 Требуемые пакеты устанавливаются из ./backend/backend/requirements.txt
 
 Проект FoodGram является площадкой для публикации рецептов блюд пользователей.
+Доступен по адресу lirsan.sytes.net
 
 Функционал включает в себя:
 
@@ -36,7 +37,7 @@
 ### Запуск проекта
 - Клонировать репозиторий
 ```
-git clone git@github.com:Kirsan94/foodgram-project-react.git
+git clone git@github.com:Kirsan94/FoodGram.git
 ```
 - Установить docker и docker-compose
 ```
