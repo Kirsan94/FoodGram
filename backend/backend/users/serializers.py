@@ -7,6 +7,12 @@ from .models import User
 
 
 class CustomUserSerializer(UserSerializer):
+    """
+    Сериализатор для связи модели пользователя.
+    Используется для просмотра объекта пользователя.
+    Информация дополнена полем, отражающим наличие подписки
+    запросившего объект пользователя на просматриваемого пользователя.
+    """
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
@@ -31,6 +37,9 @@ class CustomUserSerializer(UserSerializer):
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
+    """
+    Сериализатор для создания модели пользователя.
+    """
     password = serializers.CharField(
         style={"input_type": "password"},
         write_only=True

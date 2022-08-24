@@ -16,12 +16,18 @@ from .serializers import (Favorite, FavoriteSerializer, Ingredient,
 
 
 class TagViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для тэгов.
+    """
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
     pagination_class = None
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для ингредиентов.
+    """
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
     pagination_class = None
@@ -30,6 +36,11 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для рецептов.
+    Имеет @action для добавления в избранное и список покупок,
+    а также для скачивания списка покупок файлом.
+    """
     serializer_class = RecipeSerializer
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrAdminOrReadOnly, ]
@@ -118,6 +129,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """
+    Вьюсет для пользователей.
+    Имеет @action для подписки на автора и просмотра своих подписок.
+    """
     serializer_class = UserSubscriptionSerializer
     queryset = User.objects.all()
 

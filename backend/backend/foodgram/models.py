@@ -6,6 +6,11 @@ User = get_user_model()
 
 
 class Tag(models.Model):
+    """
+    Модель для тэгов рецептов.
+    Предполагаемые тэги: Завтрак, Обед, Ужин.
+    Допустимо прикрепление нескольких тэгов к рецепту.
+    """
     name = models.CharField('Название', max_length=256, unique=True)
     slug = models.SlugField('Уникальный слаг', unique=True)
     color = models.CharField(
@@ -20,6 +25,10 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
+    """
+    Модель для ингредиентов.
+    Недопустимы повторения пар Название<->Единица измерения.
+    """
     name = models.CharField('Название', max_length=200)
     measurement_unit = models.CharField('Единица измерения', max_length=200)
 
@@ -36,6 +45,9 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
+    """
+    Модель для рецептов.
+    """
     name = models.CharField(
         'Название',
         max_length=256,
@@ -83,6 +95,11 @@ class Recipe(models.Model):
 
 
 class ShoppingList(models.Model):
+    """
+    Модель для списка закупок.
+    Привязывает рецепт к пользователю в отдельной таблице
+    для дальнейшей выгрузки ингредиентов всех рецептов в списке в файл.
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -101,6 +118,10 @@ class ShoppingList(models.Model):
 
 
 class Favorite(models.Model):
+    """
+    Модель для избранных рецептов.
+    Отражает связь рецепта с пользователем.
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -125,6 +146,10 @@ class Favorite(models.Model):
 
 
 class Subscription(models.Model):
+    """
+    Модель для подписок на авторов рецептов.
+    Отражает связь автора рецептов с пользователем.
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -149,6 +174,10 @@ class Subscription(models.Model):
 
 
 class RecipeIngredient(models.Model):
+    """
+    Модель для связи между рецептом и игридиентом.
+    Недопустимы повторения пар Рецепт<->Ингредиент
+    """
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Название рецепта',

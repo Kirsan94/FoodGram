@@ -10,6 +10,10 @@ from users.serializers import CustomUserSerializer
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для связи рецепта с ингредиентом.
+    Подтягивает id, name и measurement_unit из связанного ингредиента.
+    """
     measurement_unit = serializers.StringRelatedField(
         source='ingredient.measurement_unit'
     )
@@ -30,7 +34,9 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-
+    """
+    Сериализатор для тэгов.
+    """
     class Meta:
         fields = (
             'id',
@@ -42,13 +48,20 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-
+    """
+    Сериализатор для ингредиентов.
+    """
     class Meta:
         fields = '__all__'
         model = Ingredient
 
 
 class RecipeSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для рецептов.
+    Подтягивает данные их объекта тэгов, автора и ингредиента.
+    Также, отображает наличие рецепта в избранном и списке закупок.
+    """
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
     tags = TagSerializer(read_only=True, many=True)
@@ -184,12 +197,18 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для избранных рецептов.
+    """
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time',)
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для списка покупок.
+    """
     image = Base64ImageField(use_url=True, required=True)
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     name = serializers.StringRelatedField()
@@ -206,6 +225,11 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
 
 class UserSubscriptionSerializer(CustomUserSerializer):
+    """
+    Сериализатор для подписок.
+    Подтягивает список рецептов авторов
+    на которых подписан пользователь.
+    """
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.BooleanField(default=True, read_only=True)
