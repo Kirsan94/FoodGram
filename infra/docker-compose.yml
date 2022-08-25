@@ -14,9 +14,7 @@ services:
       - ./.env
 
   backend:
-    build:
-      context: ../backend/backend
-      dockerfile: Dockerfile
+    image: kirsan94/foodgram_backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -27,9 +25,7 @@ services:
       - ./.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: kirsan94/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
@@ -45,5 +41,6 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
+      - ../docs/:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
