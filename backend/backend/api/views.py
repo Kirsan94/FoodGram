@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from foodgram.models import Subscription
 
-from .filters import RecipeFilter, IngredientFilter
+from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAuthorOrAdminOrReadOnly
 from .serializers import (Favorite, FavoriteSerializer, Ingredient,
                           IngredientSerializer, Recipe, RecipeIngredient,

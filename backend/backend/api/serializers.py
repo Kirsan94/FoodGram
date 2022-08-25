@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
 from foodgram.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
-                             ShoppingList, Tag, Subscription)
+                             ShoppingList, Subscription, Tag)
 from users.models import User
 from users.serializers import CustomUserSerializer
 
