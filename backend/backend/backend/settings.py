@@ -8,7 +8,7 @@ SECRET_KEY = os.getenv(
     default='6n=9!(z3(a8r!61!1lbgdr*7k5(fwkv&lf=a92#1eo+s$&yqde'
 )
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
