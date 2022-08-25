@@ -155,7 +155,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                 'tags': 'Нужно выбрать хотя бы один тэг!'
             })
 
-        if len(value) == len(set(value)):
+        if len(value) != len(set(value)):
             raise serializers.ValidationError({
                 'tags': 'Тэги должны быть уникальными!'
             })
