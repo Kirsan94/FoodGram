@@ -77,7 +77,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         source='recipeingredient',
         required=True
     )
-    image = Base64ImageField()
+    image = Base64ImageField(use_url=True, required=True)
 
     class Meta:
         model = Recipe
@@ -183,6 +183,8 @@ class RecipeSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.ingredients.clear()
         instance.tags.clear()
+        print(validated_data)
+        print(instance)
         RecipeIngredient.objects.filter(recipe=instance).all().delete()
         tags_data = validated_data.pop('tags')
         instance.tags.set(tags_data)

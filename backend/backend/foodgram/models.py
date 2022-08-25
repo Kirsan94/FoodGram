@@ -69,8 +69,6 @@ class Recipe(models.Model):
     image = models.ImageField(
         'Картинка',
         upload_to='recipes/',
-        null=True,
-        blank=True,
     )
     text = models.TextField('Описание')
     cooking_time = models.PositiveIntegerField(
