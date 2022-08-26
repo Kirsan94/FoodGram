@@ -19,7 +19,11 @@ class Tag(models.Model):
         default='#ffffff'
     )
 
-    def str(self):
+    class Meta:
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'
+
+    def __str__(self):
         return self.name
 
 
@@ -39,7 +43,11 @@ class Ingredient(models.Model):
             )
         ]
 
-    def str(self):
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+
+    def __str__(self):
         return self.name
 
 
@@ -81,15 +89,12 @@ class Recipe(models.Model):
         db_index=True
     )
 
-    pub_date = models.DateTimeField(
-        'Дата публикации',
-        auto_now_add=True
-    )
-
     class Meta:
-        ordering = ['pub_date']
+        ordering = ['-id']
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
 
-    def str(self):
+    def __str__(self):
         return self.name
 
 
@@ -112,7 +117,11 @@ class ShoppingList(models.Model):
         related_name='shoppinglist'
     )
 
-    def str(self):
+    class Meta:
+        verbose_name = 'Список покупок'
+        verbose_name_plural = 'Списки покупок'
+
+    def __str__(self):
         return f'{self.user} - {self.recipe}'
 
 
@@ -139,8 +148,10 @@ class Favorite(models.Model):
                 name='unique_follow'
             )
         ]
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранные'
 
-    def str(self):
+    def __str__(self):
         return f'{self.user} - {self.recipe}'
 
 
@@ -167,8 +178,10 @@ class Subscription(models.Model):
                 name='unique_subscription'
             )
         ]
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
-    def str(self):
+    def __str__(self):
         return f'{self.user} - {self.author}'
 
 
@@ -193,9 +206,6 @@ class RecipeIngredient(models.Model):
         'Количество'
     )
 
-    def str(self):
-        return f'{self.recipe} - {self.ingredient} - {self.amount}'
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -203,4 +213,9 @@ class RecipeIngredient(models.Model):
                 name='unique_ingredient',
             ),
         ]
+        verbose_name = 'Ингредиент рецепта'
+        verbose_name_plural = 'Ингредиенты рецепта'
         ordering = ['recipe']
+
+    def __str__(self):
+        return f'{self.recipe} - {self.ingredient} - {self.amount}'
