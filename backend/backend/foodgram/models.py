@@ -81,6 +81,11 @@ class Recipe(models.Model):
         db_index=True
     )
 
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
+
     class Meta:
         ordering = ['pub_date']
 
