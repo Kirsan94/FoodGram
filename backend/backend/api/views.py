@@ -128,7 +128,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             f'{ingredient["ingredient__measurement_unit"]}'
             for ingredient in ingrediants_values
         ])
-        return HttpResponse(shopping_cart, content_type='application/txt')
+        return HttpResponse(shopping_cart, content_type='text/plain')
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -163,9 +163,8 @@ class UserViewSet(viewsets.ModelViewSet):
                 context={'request': request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            in_subscribed.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        in_subscribed.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(
         detail=False,

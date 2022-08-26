@@ -82,7 +82,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ['pub_date']
 
     def str(self):
         return self.name
